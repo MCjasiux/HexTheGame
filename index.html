@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/TRIS.js"></script>
+    <script src="js/PLAYER.JS"></script>
+    <script src="js/settings.js"></script>
+    <script src="libs/jquery.js"></script>
+    <script src="libs/three.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/net.js"></script>
+    <script src="js/light.js"></script>
+    <script src="libs/OrbitControls.js"></script>
+    <script src="js/hex.js"></script>
+    <script src="libs/socket.io.js"></script>
+    <script>
+        $(document).ready(function () {
+            var hextab = [];
+            var scene = new THREE.Scene();
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var camera = new THREE.PerspectiveCamera(
+                45, // kąt patrzenia kamery (FOV - field of view)
+                w / h, // proporcje widoku, powinny odpowiadać proporjom naszego ekranu przeglądarki
+                0.1, // minimalna renderowana odległość
+                10000 // maxymalna renderowana odległość
+            )
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setClearColor(0x262626);
+            renderer.setSize(w, h);
+
+            var geometry = new THREE.CylinderGeometry(5, 5, 3, 6, 1);
+            var material = new THREE.MeshBasicMaterial({
+                color: 0xaa0000,
+                side: THREE.DoubleSide,
+                wireframe: false,
+                transparent: false,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+            })
+            var hex = new THREE.Mesh(geometry, material);
+            scene.add(hex);
+
+
+            for (var i = 0; i < 5; i++) {
+                var hexc = new THREE.Mesh(geometry, material.clone());
+                hexc.position.x = Math.random() * -50 + 20;
+                hexc.position.y = Math.random() * -20 - 10;
+                hexc.position.z = Math.random() * -50 + 20;
+                scene.add(hexc);
+
+
+
+            }
+
+            var geometry2 = new THREE.CylinderGeometry(5, 5, 3, 6, 1);
+            var material2 = new THREE.MeshBasicMaterial({
+                color: 0x068add,
+                side: THREE.DoubleSide,
+                wireframe: false,
+                transparent: false,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+            })
+            var hex2 = new THREE.Mesh(geometry2, material2);
+
+            hex2.position.set(-20, -50, -20);
+
+
+            for (var i = 0; i < 7; i++) {
+                var hex2 = new THREE.Mesh(geometry2, material2.clone());
+                hex2.position.x = Math.random() * -50;
+                hex2.position.y = Math.random() * -80 - 10;
+                hex2.position.z = Math.random() * -50;
+                scene.add(hex2);
+
+            }
+
+
+            // var orbitControl = new THREE.OrbitControls(camera, renderer.domElement);
+            // orbitControl.addEventListener('change', function () {
+            //     renderer.render(scene, camera)
+            // })
+
+            $("#bg").append(renderer.domElement);
+            camera.position.set(7, 15, 7);
+            camera.lookAt(scene.position);
+
+            function render() {
+                requestAnimationFrame(render);
+                hex.rotation.y += 0.001;
+                camera.rotation.x += 0.0001;
+                camera.rotation.z += 0.0001;
+                camera.rotation.y += 0.0001;
+                renderer.render(scene, camera);
+
+            }
+            render();
+        })
+
+
+    </script>
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        #helper {
+            position: fixed;
+            top: 0;
+            background-color: white;
+        }
+
+        #logo {
+            background: url(images/logo.png);
+            width: 1000px;
+            height: 300px;
+            position: fixed;
+            margin: auto;
+            left: 0;
+            right: 0;
+        }
+
+        #login {
+            position: relative;
+            margin: 0 auto;
+            left: 50px;
+            width: 400px;
+            height: 100px;
+            border: none;
+            background: url(images/start.png);
+        }
+
+        #login:hover {
+            background: url('images/starth.png');
+            cursor: pointer;
+        }
+
+        #txt1 {
+            position: relative;
+            width: 350px;
+            height: 30px;
+            border: none;
+            border-radius: 4px;
+            left: 75px;
+        }
+
+        #menu {
+            position: fixed;
+            margin: auto;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 500px;
+            height: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="logo"></div>
+    <div id="root"></div>
+    <div id="menu">
+
+        <button id="login"></button>
+        <input type="text" name="text" id="txt1" placeholder="Nick">
+
+        <div id="helper"> </div>
+    </div>
+    <div id="bg"></div>
+</body>
+
+</html>

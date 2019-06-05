@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="libs/jquery.js"></script>
+    <script src="libs/socket.io.js"></script>
+    <script>
+        $(function () {
+            let client = io()
+            let table
+            client.emit("results", {
+                results: true,
+            })
+            client.on("resulty", function (data) {
+                console.log(data)
+                table = data
+                console.log(table[0], table[0].player1)
+                dupnijTabelke();
+            })
+            function dupnijTabelke() {
+                let tabelka = $('<table>').addClass('foo');
+                for (let i = 0; i < 10; i++) {
+                    if (table[table.length - 10 + i]) {
+                        let td = $('<tr>')
+
+                        let tr1 = $('<td>').text(table[table.length - 10 + i].player1)
+                        let tr2 = $('<td>').text(table[table.length - 10 + i].player2)
+                        let tr3 = $('<td>').text(table[table.length - 10 + i].winner)
+                        let tr4 = $('<td>').text(table[table.length - 10 + i].moves)
+                        let tr5 = $('<td>').text(table[table.length - 10 + i].date)
+
+                        td.append(tr1, tr2, tr3, tr4, tr5)
+                        tabelka.append(td)
+                    }
+
+                }
+                tabelka.appendTo(document.body)
+            }
+        })
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+
+
+        td {
+            border: 2px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+
+</body>
+
+</html>
